@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home mini-crm</title>
+    <title>Home - mini-crm</title>
 </head>
 <body>
     <h1>Contacts</h1>
@@ -16,7 +16,17 @@
             <th>Phone number</th>
         </tr>
         <?php
-        require_once '../controller/getContact.php';
+        require_once '../model/connect.php';
+
+        $select = "Select * from Contact";
+        $result = mysqli_query($connect, $select);
+
+        $contacts = [];
+
+        while($row = $result->fetch_assoc())
+        {
+            array_push($contacts, $row);
+        }
 
         foreach($contacts as $contact){
             $html = "<tr>".
@@ -26,7 +36,9 @@
             if(isset($contact["phone"])){
                 $html .= "<td>".$contact["phone"]."</td>";
             }
-            $html .= "</tr>";
+            $html .= "<td><a href='./modify.php?id=".$contact["id"]."'>Modify</a></td>".
+            "<td><a href=''>Delete</a></td>".
+            "</tr>";
 
             echo($html);
         }
