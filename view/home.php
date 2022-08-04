@@ -8,6 +8,9 @@
 </head>
 <body>
     <h1>Contacts</h1>
+    <a href='./add.php'>Add new</a>
+    <br/>
+    <br/>
     <table>
         <tr>
             <th>First name</th>
@@ -17,27 +20,20 @@
         </tr>
         <?php
         require_once '../model/connect.php';
+        require_once '../model/contact.php';
 
-        $select = "Select * from Contact";
-        $result = mysqli_query($connect, $select);
-
-        $contacts = [];
-
-        while($row = $result->fetch_assoc())
-        {
-            array_push($contacts, $row);
-        }
+        $contacts = Contact::getAll();
 
         foreach($contacts as $contact){
             $html = "<tr>".
-            "<td>".$contact["firstname"]."</td>".
-            "<td>".$contact["lastname"]."</td>".
-            "<td>".$contact["email"]."</td>";
-            if(isset($contact["phone"])){
-                $html .= "<td>".$contact["phone"]."</td>";
+            "<td>".$contact->firstname."</td>".
+            "<td>".$contact->lastname."</td>".
+            "<td>".$contact->email."</td>";
+            if(isset($contact->phone)){
+                $html .= "<td>".$contact->phone."</td>";
             }
-            $html .= "<td><a href='./modify.php?id=".$contact["id"]."'>Modify</a></td>".
-            "<td><a href=''>Delete</a></td>".
+            $html .= "<td><a href='./modify.php?id=".$contact->id."'>Modify</a></td>".
+            "<td><a href='../controller/deleteContact.php?id=".$contact->id."'>Delete</a></td>".
             "</tr>";
 
             echo($html);

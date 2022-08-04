@@ -8,6 +8,11 @@ if(!isset($_POST["phone"])){
     $contact = new Contact($_GET["id"],$_POST["firstname"],$_POST["lastname"],$_POST["email"],$_POST["phone"]);
 }
 
-$contact->modify($connect);
 
-header("Location:../view/home.php");
+
+if($contact->verifValidity()){
+    $contact->modify();
+    header("Location:../view/home.php");
+}else{
+    header("Location:../view/modify.php?message=unvalidated&id=".$_GET["id"]);
+}

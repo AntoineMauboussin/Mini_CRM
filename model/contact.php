@@ -29,43 +29,67 @@ class Contact
         }
     }
     
-    public function insert($connect): void
+    public function insert(): void
     {
         if(!isset($this->phone)){
             $insert = "Insert into Contact (firstname, lastname, email) values ('".$this->firstname."','".$this->lastname."', '".$this->email."')";
-            $this->id = mysqli_query($connect, $insert);
+            $this->id = mysqli_query($GLOBALS["connect"], $insert);
         }
         else
         {
             $insert = "Insert into Contact (firstname, lastname, email, phone) values ('".$this->firstname."','".$this->lastname."', '".$this->email."', '".$this->phone."')";
-            $this->id = mysqli_query($connect, $insert);
+            $this->id = mysqli_query($GLOBALS["connect"], $insert);
         }
+
+        $this->id = $GLOBALS["connect"]->insert_id;
     }
 
-    public function modify($connect): void
+    public function modify(): void
     {
+        if($this->id == null){
+            return;
+        }
         if(!isset($this->phone)){
             $update = "Update Contact set firstname = '".$this->firstname."', lastname = '".$this->lastname."', email = '".$this->email."' where id = '".$this->id."'";
-            mysqli_query($connect, $update);
+            mysqli_query($GLOBALS["connect"], $update);
         }
         else
         {
             $update = "Update Contact set firstname = '".$this->firstname."', lastname = '".$this->lastname."', email = '".$this->email."', phone = '".$this->phone."' where id = ".$this->id."";
-            var_dump($update);
-            mysqli_query($connect, $update);
+            mysqli_query($GLOBALS["connect"], $update);
         }
     }
 
-    public function delete($connect): void
+    public function delete(): void
     {
+        if($this->id == null){
+            return;
+        }
         $update = "Delete from Contact where id = ".$this->id."";
-        mysqli_query($connect, $update);
+        mysqli_query($GLOBALS["connect"], $update);
     }
 
-    public static function getFromId(int $id, $connect): self
+    public function verifValidity(): bool
+    {
+        if(!empty($this->firstname) && !empty($this->lastname) && !empty($this->email) && filter_var($this->email, FILTER_VALIDATE_EMAIL)){
+            if(!empty($this->phone)){
+                if(is_numeric($this->phone)){
+                    return true;
+                }else{
+                    return false;
+                }
+            }else{
+                return true;
+            }
+        }else{
+            return false;
+        }
+    }
+
+    public static function getFromId(int $id)
     {
         $update = "Select * from Contact where id = ".$id."";
-        $result = mysqli_query($connect, $update);
+        $result = mysqli_query($GLOBALS["connect"], $update);
 
         while($row = $result->fetch_assoc())
         {
@@ -75,6 +99,26 @@ class Contact
                 return new self($id, $row["firstname"],$row["lastname"],$row["email"],$row["phone"]);
             }
         }
+        return null;
+    }
+
+    public static function getAll(): array
+    {
+        $update = "Select * from Contact";
+        $result = mysqli_query($GLOBALS["connect"], $update);
+        $contacts = [];
+
+        while($row = $result->fetch_assoc())
+        {
+            if(!isset($row["phone"])){
+                $contact = new self($row["id"], $row["firstname"],$row["lastname"],$row["email"]);
+            }else{
+                $contact = new self($row["id"], $row["firstname"],$row["lastname"],$row["email"],$row["phone"]);
+            }
+            array_push($contacts, $contact);
+        }
+
+        return $contacts;
     }
 }
 
