@@ -9,7 +9,7 @@ if(!isset($_POST["phone"])){
 }
 
 
-
+//modifie le contacte dans la bdd si valide, sinon retour au formulaire avec message d'erreur
 if($contact->verifValidity()){
     $contact->modify();
     header("Location:../view/home.php");

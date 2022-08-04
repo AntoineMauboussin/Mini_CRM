@@ -21,9 +21,11 @@
         <?php
         require_once '../model/connect.php';
         require_once '../model/contact.php';
-
+        
+        //récupération de tous les contacts
         $contacts = Contact::getAll();
 
+        //affichage de chaque contact dans un tableau
         foreach($contacts as $contact){
             $html = "<tr>".
             "<td>".$contact->firstname."</td>".

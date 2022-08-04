@@ -11,15 +11,18 @@
     require_once '../model/connect.php';
     require_once '../model/contact.php';
 
+    //récupération des infos du contact modifié
     $contact = Contact::getFromId($_GET["id"]);
 
     ?>
     <h1>Modify contact <?php echo($contact->firstname." ".$contact->lastname); ?></h1>
     <?php
+    //affichage d'un message en cas de champs non valides
     if(isset($_GET["message"]) && $_GET["message"] == "unvalidated"){
         echo("<p>One or several field is not valid</p>");
     }
     ?>
+    <!-- Formulaire de modification avec champs préremplis ave cles infos du contact -->
     <form method="POST" action="../controller/modifyContact.php?id=<?php echo($contact->id); ?>">
         <label for="firstname">First name : </label>
         <input type="text" name="firstname" value="<?php echo($contact->firstname); ?>" required>

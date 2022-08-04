@@ -8,6 +8,7 @@ class Contact
     public $email;
     public $phone;
     
+    //création d'un contact avec ou sans numéro
     public function __construct()
     {
         $nbParam=func_num_args();
@@ -29,6 +30,7 @@ class Contact
         }
     }
     
+    //insert le contact dans la base de données
     public function insert(): void
     {
         if(!isset($this->phone)){
@@ -44,6 +46,7 @@ class Contact
         $this->id = $GLOBALS["connect"]->insert_id;
     }
 
+    //modifie le contact dans la bdd selon l'id
     public function modify(): void
     {
         if($this->id == null){
@@ -60,6 +63,7 @@ class Contact
         }
     }
 
+    //supprime le contact dans la bdd selon l'id
     public function delete(): void
     {
         if($this->id == null){
@@ -69,6 +73,7 @@ class Contact
         mysqli_query($GLOBALS["connect"], $update);
     }
 
+    //vérifie la validité du contact
     public function verifValidity(): bool
     {
         if(!empty($this->firstname) && !empty($this->lastname) && !empty($this->email) && filter_var($this->email, FILTER_VALIDATE_EMAIL)){
@@ -86,6 +91,7 @@ class Contact
         }
     }
 
+    //récupère un contact dans la bdd selon son id
     public static function getFromId(int $id)
     {
         $update = "Select * from Contact where id = ".$id."";
@@ -102,6 +108,7 @@ class Contact
         return null;
     }
 
+    //récupère le tableau de tous les contacts a partir de la bdd
     public static function getAll(): array
     {
         $update = "Select * from Contact";

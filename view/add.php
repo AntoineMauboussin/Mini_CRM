@@ -14,6 +14,7 @@
     ?>
     <h1>Create contact</h1>
     <?php
+    //affichage d'un message en cas de champs non valides
     if(isset($_GET["message"]) && $_GET["message"] == "unvalidated"){
         echo("<p>One or several field is not valid</p>");
     }
